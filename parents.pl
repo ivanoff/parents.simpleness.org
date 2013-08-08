@@ -4,12 +4,22 @@ use strict;
 use Storable;
 use WWW::Mechanize;
 
+die &help_message if !@ARGV || $ARGV[0] =~ /^-*h(elp)?$/;       #show help message
+
 $| = 1;                                 #forces a flush right away
 my $dir = ( $0 =~ m%^(.*/)% )[0];       #where we're located
 my $store = $dir.'sites';               #path to hash storable file with domains
 my $sites = -f $store? retrieve( $store ) : {};     #retrieve previous domain names
 my $mech = WWW::Mechanize->new();
 
+$_ = $ARGV[0];
+
+/^list$/ && do {
+    
+}
+
+
+/^start$/ && do {
 #we will read tcpdump's output on port 80 to find Host with domain name
 open (STDIN,"/usr/sbin/tcpdump 'port 80' -vvvs 1024 -l -A |");
 while (<STDIN>) {
@@ -31,5 +41,29 @@ while (<STDIN>) {
         $sites->{white}{$_} = 1;
     }
     store $sites, $store;
+}
+}
+
+sub help_message {
+<<EOF;
+Block adult sites. 
+More on parents.simpleness.org
+Usage:  $0 (parameters) [black|white] [domain name]
+Command line parameters:
+    start       start parents agent
+    stop        stop parents agent
+    restart     restart parents agent
+    status      show current status
+    list        list all domains
+    add         add domain to black or white list
+    delete      delete domain from black or white list
+    --help   show this help
+Example:
+    $0 status
+    $0 list
+    $0 list black simple.*
+    $0 add white simpleness.org
+    $0 delete black ivanoff.org.ua
+EOF
 }
 
