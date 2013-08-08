@@ -15,7 +15,15 @@ my $mech = WWW::Mechanize->new();
 $_ = $ARGV[0];
 
 /^list$/ && do {
-    
+    die "there is no information about domains" unless $sites;
+    foreach my $type ( keys %$sites ) {
+        next if $ARGV[1] && $ARGV[1] ne $type;
+        print "$type :\n";
+        foreach my $name ( keys %{$sites->{$type}} ){
+            next if $ARGV[2] && $ARGV[2] !~ /$name/i;
+            print "\t$name\n";
+        }
+    }
 }
 
 
