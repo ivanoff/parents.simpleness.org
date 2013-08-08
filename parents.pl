@@ -30,5 +30,6 @@ while (<STDIN>) {
     } else {
         $sites->{white}{$_} = 1;
     }
-    store $sites, $dir.'/sites';
+    store $sites, $store;
 }
+
