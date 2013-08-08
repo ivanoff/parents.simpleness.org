@@ -26,6 +26,12 @@ $_ = $ARGV[0];
     }
 }
 
+/^add$/ && do {
+    die "need type and domain name. type $0 -h for more info" unless $ARGV[2];
+    die "type is not acceptable. type $0 -h for more info" if $ARGV[1] !~ /^black|white$/;
+    $sites->{$ARGV[1]}{$ARGV[2]} = 1;
+    store $sites, $store;
+}
 
 /^start$/ && do {
 #we will read tcpdump's output on port 80 to find Host with domain name
