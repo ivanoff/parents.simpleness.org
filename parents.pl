@@ -46,6 +46,8 @@ $_ = $ARGV[0];
 
 /^start$/ && do {
 #we will read tcpdump's output on port 80 to find Host with domain name
+use Proc::PID::File;
+die "Already running!" if Proc::PID::File->running();
 open (STDIN,"/usr/sbin/tcpdump 'port 80' -vvvs 1024 -l -A |");
 while (<STDIN>) {
     next unless /Host: (\S+)\s$/;
