@@ -50,6 +50,16 @@ $_ = $ARGV[0];
     die "Stopped\n";
 };
 
+/^restart$/ && do {
+    $_='stop-';
+};
+
+/^stop(-)?$/ && do {
+    my $pid = Proc::PID::File->running();
+    `kill $pid` if $pid;
+    $_='start' if $1;
+};
+
 /^start$/ && do {
 #we will read tcpdump's output on port 80 to find Host with domain name
 die "Already running!" if Proc::PID::File->running();
