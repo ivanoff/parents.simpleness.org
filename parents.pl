@@ -24,14 +24,25 @@ $_ = $ARGV[0];
             print "\t$name\n";
         }
     }
-}
+};
 
 /^add$/ && do {
-    die "need type and domain name. type $0 -h for more info" unless $ARGV[2];
-    die "type is not acceptable. type $0 -h for more info" if $ARGV[1] !~ /^black|white$/;
+    &need_bw( $ARGV[1] );
+    &need_name( $ARGV[2] );
     $sites->{$ARGV[1]}{$ARGV[2]} = 1;
     store $sites, $store;
-}
+    hosts( 'add', $ARGV[2] );
+    $ARGV[1]=($ARGV[1] eq 'black')? 'white' : 'black';
+    $_ = 'delete';
+};
+
+/^delete$/ && do {
+    &need_bw( $ARGV[1] );
+    &need_name( $ARGV[2] );
+    delete $sites->{$ARGV[1]}{$ARGV[2]};
+    store $sites, $store;
+    hosts( 'delete', $ARGV[2] );
+};
 
 /^start$/ && do {
 #we will read tcpdump's output on port 80 to find Host with domain name
@@ -45,17 +56,35 @@ while (<STDIN>) {
     #if we found more than 15 bad words, then ban it
     $sites = -f $store? retrieve( $store ) : {};     #retrieve previous domain names again after slow download
     if ( 15 < $c =~ s/p[o0]rn[o0]?|sex|anal|tits|harcore|cumshots|blowjob|lesbian|pusy|fucking|orgasm|pissing//ig ) {
-        if( !$sites->{black}{$_} ) {
-            open my $f, '>>', '/etc/hosts';     #write black domain name to /etc/hosts to ban
-            print {$f} "\n127.0.0.1\t$_";
-            close $f;
-        }
+        hosts('add', $_);
         $sites->{black}{$_} = 1;
     } else {
         $sites->{white}{$_} = 1;
     }
     store $sites, $store;
 }
+};
+
+sub hosts {
+    my( $_, $name ) = @_;
+    open my $f, (/^add$/)?'>>':'>', '/etc/hosts';     #write black domain name to /etc/hosts to ban
+    /^add$/ && do {  print {$f} "\n127.0.0.1\t$name";  };
+    /^delete$/ && do {
+        open my $fr, '<', '/etc/hosts';
+        my @records = <$fr>;
+        close $fr;
+        grep { !/$name/i } @records;
+        print {$f} @records;
+    };
+    close $f;
+}
+
+sub need_bw {
+    die "list type is not acceptable. type $0 -h for more info" if $_[0] !~ /^black|white$/;
+}
+
+sub need_name {
+    die "need domain name. type $0 -h for more info" unless $_[0];
 }
 
 sub help_message {
