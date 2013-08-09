@@ -3,6 +3,7 @@
 use strict;
 use Storable;
 use WWW::Mechanize;
+use Proc::PID::File;
 
 die &help_message if !@ARGV || $ARGV[0] =~ /^-*h(elp)?$/;       #show help message
 
@@ -44,9 +45,13 @@ $_ = $ARGV[0];
     hosts( 'delete', $ARGV[2] );
 };
 
+/^status$/ && do {
+    die "Running PID[".Proc::PID::File->running()."]\n" if Proc::PID::File->running();
+    die "Stopped\n";
+};
+
 /^start$/ && do {
 #we will read tcpdump's output on port 80 to find Host with domain name
-use Proc::PID::File;
 die "Already running!" if Proc::PID::File->running();
 open (STDIN,"/usr/sbin/tcpdump 'port 80' -vvvs 1024 -l -A |");
 while (<STDIN>) {
