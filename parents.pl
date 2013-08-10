@@ -9,6 +9,7 @@ die "Error: Must run as root (sudo $0 ".(join ' ', @ARGV).")\n" if $>;
 die &help_message if !@ARGV || $ARGV[0] =~ /^-*h(elp)?$/;       #show help message
 
 $| = 1;                                 #forces a flush right away
+my $pid = Proc::PID::File->running();
 my $dir = ( $0 =~ m%^(.*/)% )[0];       #where we're located
 my $store = $dir.'sites';               #path to hash storable file with domains
 my $sites = -f $store? retrieve( $store ) : {};     #retrieve previous domain names
@@ -56,21 +57,22 @@ $_ = $ARGV[0];
 };
 
 /^stop(-)?$/ && do {
-    my $pid = Proc::PID::File->running();
     `kill $pid` if $pid;
     $_ = 'start' if $1;
 };
 
 /^start$/ && do {
-    my $pid_fork = fork();
-    if ($pid_fork) {
-        $_ = 'status';
-    } else {
+    die "Already running!" if $pid;
+#    my $pid_fork = fork();
+#    if ($pid_fork) {
+#        $_ = 'status';
+#    } else 
+    {
         #we will read tcpdump's output on port 80 to find Host with domain name
-        die "Already running!" if Proc::PID::File->running();
-        open (STDIN,"/usr/sbin/tcpdump 'port 80' -vvvs 1024 -l -A |");
+        open (STDIN,"/usr/sbin/tcpdump 'port 80' -vvvs 1024 -l -A -i any |");
         while (<STDIN>) {
             next unless /Host: (\S+)\s$/;
+print $1;
             my $_ = $1;
             next if $sites->{white}{$_} || $sites->{black}{$_}; #skip if we already found domain name before
             eval{ $mech->get( 'http://'.$_ ) };                 #download the website's homepage to find bad words
@@ -90,22 +92,26 @@ $_ = $ARGV[0];
 };
 
 /^status$/ && do {
-    my $pid = Proc::PID::File->running();
     print ( ($pid)? "RUNNED [PID $pid]" : "STOPPED" );
 };
 
 sub hosts {
     my( $_, $name ) = @_;
-    open my $f, (/^add$/)?'>>':'>', '/etc/hosts';     #write black domain name to /etc/hosts to ban
-    /^add$/ && do {  print {$f} "\n127.0.0.1\t$name";  };
     /^delete$/ && do {
-        open my $fr, '<', '/etc/hosts';
-        my @records = <$fr>;
-        close $fr;
+        open my $f, '<', '/etc/hosts';
+        my @records = <$f>;
+        close $f;
         grep { !/$name/i } @records;
+
+	open $f, '>', '/etc/hosts';
         print {$f} @records;
+	close $f;
     };
-    close $f;
+    /^add$/ && do {  
+	open my $f, '>>', '/etc/hosts';
+	print {$f} "\n127.0.0.1\t$name";  
+	close $f;
+    };
 }
 
 sub need_bw {
