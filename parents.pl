@@ -8,7 +8,7 @@ die "Error: Must run as root (sudo $0 ".(join ' ', @ARGV).")\n" if $>;
 die &help_message if !@ARGV || $ARGV[0] =~ /^-*h(elp)?$/;       #show help message
 
 $| = 1;                                 #forces a flush right away
-my $pid = `ps aux | grep parents.pl | grep started | grep -v grep | awk '{printf "%d", \$2}'`;
+my $pid = &get_pid;
 my $dir = ( $0 =~ m%^(.*/)% )[0];       #where we're located
 my $store = $dir.'sites';               #path to hash storable file with domains
 my $sites = -f $store? retrieve( $store ) : {};     #retrieve previous domain names
@@ -51,6 +51,7 @@ $_ = $ARGV[0];
 
 /^stop(-)?$/ && do {
     `kill $pid` if $pid;
+    $pid = &get_pid;
     $_ = ($1)? 'start' : 'status';
 };
 
@@ -84,6 +85,7 @@ $_ = $ARGV[0];
 };
 
 /^status$/ && do {
+    $pid = &get_pid;
     die ( ($pid)? "Running [PID $pid]\n" : "Stopped\n" );
 };
 
@@ -104,6 +106,10 @@ sub hosts {
 	print {$f} "\n127.0.0.1\t$name";  
 	close $f;
     };
+}
+
+sub get_pid {
+    `ps aux | grep parents.pl | grep started | grep -v grep | awk '{printf "%d", \$2}'`;
 }
 
 sub need_bw {
