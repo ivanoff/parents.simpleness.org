@@ -73,7 +73,7 @@ $_ = $ARGV[0];
             my $c = $mech->content();
             #if we found more than 15 bad words, then ban it
             $sites = -f $store? retrieve( $store ) : {};     #retrieve previous domain names again after slow download
-            if ( 15 < $c =~ s/p[o0]rn[o0]?|sex|anal\b|tits|harcore|cumshots|blowjob|lesbian|pusy|fucking|orgasm|pissing|порно|секс//ig ) {
+            if ( 15 < $c =~ s/p[o0]rn[o0]?|sex|anal\b|tits|harcore|cumshots|blowjob|lesbian|pusy|fucking|orgasm|pissing|pussy|порно|секс//ig ) {
                 hosts('add', $_);
                 $sites->{black}{$_} = 1;
         	`killall firefox`;
