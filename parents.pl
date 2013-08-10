@@ -5,6 +5,7 @@ use Storable;
 use WWW::Mechanize;
 use Proc::PID::File;
 
+die "Error: Must run as root (sudo $0 ".(join ' ', @ARGV).")\n" if $>;
 die &help_message if !@ARGV || $ARGV[0] =~ /^-*h(elp)?$/;       #show help message
 
 $| = 1;                                 #forces a flush right away
