@@ -51,35 +51,41 @@ $_ = $ARGV[0];
 };
 
 /^restart$/ && do {
-    $_='stop-';
+    $_ = 'stop-';
 };
 
 /^stop(-)?$/ && do {
     my $pid = Proc::PID::File->running();
     `kill $pid` if $pid;
-    $_='start' if $1;
+    $_ = 'start' if $1;
 };
 
 /^start$/ && do {
-#we will read tcpdump's output on port 80 to find Host with domain name
-die "Already running!" if Proc::PID::File->running();
-open (STDIN,"/usr/sbin/tcpdump 'port 80' -vvvs 1024 -l -A |");
-while (<STDIN>) {
-    next unless /Host: (\S+)\s$/;
-    my $_ = $1;
-    next if $sites->{white}{$_} || $sites->{black}{$_}; #skip if we already found domain name before
-    eval{ $mech->get( 'http://'.$_ ) };                 #download the website's homepage to find bad words
-    my $c = $mech->content();
-    #if we found more than 15 bad words, then ban it
-    $sites = -f $store? retrieve( $store ) : {};     #retrieve previous domain names again after slow download
-    if ( 15 < $c =~ s/p[o0]rn[o0]?|sex|anal|tits|harcore|cumshots|blowjob|lesbian|pusy|fucking|orgasm|pissing//ig ) {
-        hosts('add', $_);
-        $sites->{black}{$_} = 1;
+    my $pid_fork = fork();
+    if ($pid_fork) {
+        $_ = 'status';
     } else {
-        $sites->{white}{$_} = 1;
+        #we will read tcpdump's output on port 80 to find Host with domain name
+        die "Already running!" if Proc::PID::File->running();
+        open (STDIN,"/usr/sbin/tcpdump 'port 80' -vvvs 1024 -l -A |");
+        while (<STDIN>) {
+            next unless /Host: (\S+)\s$/;
+            my $_ = $1;
+            next if $sites->{white}{$_} || $sites->{black}{$_}; #skip if we already found domain name before
+            eval{ $mech->get( 'http://'.$_ ) };                 #download the website's homepage to find bad words
+            my $c = $mech->content();
+            #if we found more than 15 bad words, then ban it
+            $sites = -f $store? retrieve( $store ) : {};     #retrieve previous domain names again after slow download
+            if ( 15 < $c =~ s/p[o0]rn[o0]?|sex|anal|tits|harcore|cumshots|blowjob|lesbian|pusy|fucking|orgasm|pissing//ig ) {
+                hosts('add', $_);
+                $sites->{black}{$_} = 1;
+            } else {
+                $sites->{white}{$_} = 1;
+            }
+            store $sites, $store;
+        }
+        exit(0);
     }
-    store $sites, $store;
-}
 };
 
 sub hosts {
