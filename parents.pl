@@ -3,6 +3,7 @@
 use strict;
 use Storable;
 use WWW::Mechanize;
+use utf8;
 
 die "Error: Must run as root (sudo $0 ".(join ' ', @ARGV).")\n" if $>;
 die &help_message if !@ARGV || $ARGV[0] =~ /^-*h(elp)?$/;       #show help message
@@ -72,9 +73,11 @@ $_ = $ARGV[0];
             my $c = $mech->content();
             #if we found more than 15 bad words, then ban it
             $sites = -f $store? retrieve( $store ) : {};     #retrieve previous domain names again after slow download
-            if ( 15 < $c =~ s/p[o0]rn[o0]?|sex|anal\b|tits|harcore|cumshots|blowjob|lesbian|pusy|fucking|orgasm|pissing//ig ) {
+            if ( 15 < $c =~ s/p[o0]rn[o0]?|sex|anal\b|tits|harcore|cumshots|blowjob|lesbian|pusy|fucking|orgasm|pissing|порно|секс//ig ) {
                 hosts('add', $_);
                 $sites->{black}{$_} = 1;
+        	`killall firefox`;
+#        	`killall chrome`;
             } else {
                 $sites->{white}{$_} = 1;
             }
