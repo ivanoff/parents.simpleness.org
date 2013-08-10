@@ -21,7 +21,7 @@ $_ = $ARGV[0];
     foreach my $type ( keys %$sites ) {
         next if $ARGV[1] && $ARGV[1] ne $type;
         print "$type:\n";
-        foreach my $name ( keys %{$sites->{$type}} ){
+        foreach my $name ( sort keys %{$sites->{$type}} ){
             next if $ARGV[2] && $ARGV[2] !~ /$name/i;
             print "\t$name\n";
         }
