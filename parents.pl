@@ -88,6 +88,11 @@ $_ = $ARGV[0];
     }
 };
 
+/^status$/ && do {
+    my $pid = Proc::PID::File->running();
+    print ( ($pid)? "RUNNED [PID $pid]" : "STOPPED" );
+};
+
 sub hosts {
     my( $_, $name ) = @_;
     open my $f, (/^add$/)?'>>':'>', '/etc/hosts';     #write black domain name to /etc/hosts to ban
