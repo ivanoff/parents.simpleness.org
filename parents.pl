@@ -68,8 +68,9 @@ $_ = $ARGV[0];
         while (<STDIN>) {
             next unless /Host: (\S+)\s$/;
             my $_ = $1;
-            next if $sites->{white}{$_} || $sites->{black}{$_}; #skip if we already found domain name before
-            my $c = eval{ get( 'http://'.$_ ) };        #download the website's homepage to find bad words
+            next if $sites->{white}{$_} || $sites->{black}{$_}; # skip if we already found domain name before
+            my $c = eval{ get 'http://'.$_ };                   # download the website's homepages/refreshes to find bad words
+            $c = eval{ get 'http://'.$_.'/'.$1 } while $c =~ /meta.*?http-equiv="Refresh".*?content=".*?URL=(.*?)"/i;
             #if we found more than 15 bad words, then ban it
             $sites = -f $store? retrieve( $store ) : {};     #retrieve previous domain names again after slow download
             if ( 15 < $c =~ s/p[o0]rn[o0]?|sex|anal\b|tits|harcore|cumshots|blowjob|lesbian|pusy|fucking|orgasm|pissing|pussy|порно|секс//ig ) {
