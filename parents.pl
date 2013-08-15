@@ -2,7 +2,7 @@
 
 use strict;
 use Storable;
-use WWW::Mechanize;
+use LWP::Simple;
 use utf8;
 
 die "Error: Must run as root (sudo $0 ".(join ' ', @ARGV).")\n" if $>;
@@ -69,8 +69,7 @@ $_ = $ARGV[0];
             next unless /Host: (\S+)\s$/;
             my $_ = $1;
             next if $sites->{white}{$_} || $sites->{black}{$_}; #skip if we already found domain name before
-            eval{ $mech->get( 'http://'.$_ ) };                 #download the website's homepage to find bad words
-            my $c = $mech->content();
+            my $c = eval{ get( 'http://'.$_ ) };        #download the website's homepage to find bad words
             #if we found more than 15 bad words, then ban it
             $sites = -f $store? retrieve( $store ) : {};     #retrieve previous domain names again after slow download
             if ( 15 < $c =~ s/p[o0]rn[o0]?|sex|anal\b|tits|harcore|cumshots|blowjob|lesbian|pusy|fucking|orgasm|pissing|pussy|порно|секс//ig ) {
@@ -136,7 +135,7 @@ Command line parameters:
     list        list all domains
     add         add domain to black or white list
     delete      delete domain from black or white list
-    --help   show this help
+    help        show this help
 Example:
     $0 status
     $0 list
