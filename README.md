@@ -14,16 +14,4 @@ If more than 15 bad word will be on the main page, the site will banned (add dom
 
 
 Install:
-
-cpan WWW::Mechanize
-
-cpan Storable
-
-sudo mkdir /opt/parents
-
-sudo mv parents.pl /opt/parents/
-
-
-to run automaticly, insert into /etc/rc.local: "/usr/bin/perl /opt/parents/parents.pl" without quotes before "exit 0" line
-
-
+sudo ./install.sh
