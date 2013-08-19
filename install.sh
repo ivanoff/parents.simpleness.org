@@ -1,7 +1,10 @@
 #!/bin/bash
 
-echo installing Simpleness Parental Control
-echo more on http://parents.simpleness.org
+echo Installing Simpleness Parental Control
+echo More on http://parents.simpleness.org
+
+# need curl for download file
+yum -y install curl || apt-get -y install curl
 
 folder=/opt/parents     # main folder of the program on local computer
 name=parents            # name of the program on local computer
