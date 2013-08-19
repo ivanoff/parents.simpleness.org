@@ -1,7 +1,13 @@
 #!/bin/bash
 
-echo Installing Simpleness Parental Control
-echo More on http://parents.simpleness.org
+echo "Installing Simpleness Parental Control"
+echo "More on http://parents.simpleness.org"
+
+# check for root privileges
+if [ "$(id -u)" != "0" ]; then
+   echo "Error: This script must be run as root" 1>&2
+   exit 1
+fi
 
 # need curl for download file
 yum -y install curl || apt-get -y install curl
