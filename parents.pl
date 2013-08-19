@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 
 # Simpleness Parents - block adult web-sites on linux OS
+# Main script
 # more on http://parents.simpleness.org/
 # Copyright 2013 Dimitry Ivanov <2@ivanoff.org.ua>
 # Licensed under the Apache License, Version 2.0.
