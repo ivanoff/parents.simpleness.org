@@ -32,3 +32,4 @@ chmod +x $folder/$name
 # run on start computer ( if not done yet )
 grep $folder/$name /etc/rc.local || echo /usr/bin/perl $folder/$name start >> /etc/rc.local
 
+echo "Program installed if was not errors";

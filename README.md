@@ -14,7 +14,7 @@ If more than 15 bad word will be on the main page, the site will banned (add dom
 
 Install:
 
-curl -L parents.simpleness.org | sudo bash - 
+curl parents.simpleness.org | sudo bash - 
 
 or
 
