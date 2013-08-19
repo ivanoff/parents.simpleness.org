@@ -14,11 +14,11 @@ If more than 15 bad word will be on the main page, the site will banned (add dom
 
 Install:
 
-curl -L parents.simpleness.org | sudo /bin/bash - 
+curl -L parents.simpleness.org | sudo bash - 
 
 or
 
-wget -q -O - "$@" https://raw.github.com/ivanoff/parents.simpleness.org/master/install.sh | sudo /bin/bash -
+wget -q -O - "$@" https://raw.github.com/ivanoff/parents.simpleness.org/master/install.sh | sudo bash -
 
 or download install.sh and run: 
 
