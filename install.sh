@@ -27,7 +27,7 @@ chmod 0740 $folder      # nobody else can't enter to this folder
 
 # download last version from GitHub and make it runuble
 curl https://raw.github.com/ivanoff/parents.simpleness.org/master/parents.pl >$folder/$name 2>/dev/null
-chmod +x $name
+chmod +x $folder/$name
 
 # run on start computer ( if not done yet )
 grep $folder/$name /etc/rc.local || echo /usr/bin/perl $folder/$name start >> /etc/rc.local
