@@ -1,7 +1,7 @@
 parents.simpleness.org
 ======================
 
-parents control. forbid porno sites on linux.
+Parental control script. Forbid porno sites on linux.
 
 
 Description:
@@ -17,7 +17,9 @@ Install:
 curl -L parents.simpleness.org | sudo /bin/bash - 
 
 or
+
 wget -q -O - "$@" https://raw.github.com/ivanoff/parents.simpleness.org/master/install.sh | sudo /bin/bash -
 
 or download install.sh and run: 
+
 sudo ./install.sh
