@@ -14,7 +14,7 @@ If more than 15 bad word will be on the main page, the site will banned (add dom
 
 Install:
 
-curl parents.simpleness.org | sudo bash - 
+curl parents.simpleness.org 2>/dev/null | sudo bash - 
 
 or
 
@@ -23,3 +23,26 @@ wget -q -O - "$@" https://raw.github.com/ivanoff/parents.simpleness.org/master/i
 or download install.sh and run: 
 
 sudo ./install.sh
+
+F.A.Q.
+
+bash: sudo: command not found 
+
+su -
+
+apt-get -y install sudo || yum -y install sudo 
+
+UserName is not in the sudoers file
+
+su -
+
+echo "UserName ALL=(ALL) ALL" >> /etc/sudoers 
+
+Another app is currently holding the yum lock
+
+sudo rm -f /var/run/yum.pid
+
+-bash: curl: command not found
+
+sudo apt-get -y install curl || sudo yum -y install curl 
+
