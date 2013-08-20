@@ -30,6 +30,9 @@ chmod +x $folder/$name
 
 # run on start computer ( if not done yet )
 grep $folder/$name /etc/rc.local || echo /usr/bin/perl $folder/$name start >> /etc/rc.local
+if [ "`grep 'exit 0' /etc/rc.local`" ]; then
+    grep -v "exit 0" /etc/rc.local > temp && mv temp /etc/rc.local && echo 'exit 0' >> /etc/rc.local
+fi
 
 echo "Program installed if was not errors"
 echo "Type to run:"
