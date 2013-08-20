@@ -129,7 +129,7 @@ sub hosts {
 
 # Returns PID of running parents.pl process
 sub get_pid {
-    `ps aux | grep parents.pl | grep started | grep -v grep | awk '{printf "%d", \$2}'`;
+    `ps aux | grep parents | grep started | grep -v grep | awk '{printf "%d", \$2}'`;
 }
 
 # Dies if parameter is not black or white
