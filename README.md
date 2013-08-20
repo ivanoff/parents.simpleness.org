@@ -46,3 +46,13 @@ sudo rm -f /var/run/yum.pid
 
 sudo apt-get -y install curl || sudo yum -y install curl 
 
+
+Tested on:
+
+good: CentOS-6.4-i386
+
+debian-6.0.7-i386
+
+ubuntu-12.04.2-server
+
+bad: Fedora-15-i386
