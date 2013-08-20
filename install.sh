@@ -15,9 +15,6 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-# need curl for download file
-yum -y install curl || apt-get -y install curl
-
 folder=/opt/parents     # main folder of the program on local computer
 name=parents            # name of the program on local computer
 
