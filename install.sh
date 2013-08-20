@@ -15,6 +15,8 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
+apt-get -y install tcpdump || yum -y install tcpdump 
+
 folder=/opt/parents     # main folder of the program on local computer
 name=parents            # name of the program on local computer
 
