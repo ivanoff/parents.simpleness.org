@@ -81,9 +81,9 @@ Another app is currently holding the yum lock
     sudo apt-get -y install curl || sudo yum -y install curl 
 
 
-Tested on:
+Tests
 
-good: 
+passed on: 
 
     CentOS-6.4-i386
 
@@ -91,6 +91,6 @@ good:
 
     ubuntu-12.04.2-server
 
-bad: 
+failed on: 
 
     Fedora-15-i386 ( add to /etc/rc.local faled )
