@@ -10,8 +10,9 @@ use strict;
 use Storable;
 use utf8;
 
-die "Error: Must run as root (sudo $0 ".(join ' ', @ARGV).")\n" if $>;
 die &help_message if !@ARGV || $ARGV[0] =~ /^-*h(elp)?$/;       # show help message
+
+die "Error: Must run as root (sudo $0 ".(join ' ', @ARGV).")\n" if $>;
 
 $| = 1;                                         # forces a flush right away
 my $agent = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:23.0) Gecko/20100101 Firefox/23.0"; #curl agent
@@ -147,7 +148,7 @@ sub help_message {
 <<EOF;
 Block adult sites. 
 More on parents.simpleness.org
-Usage:  $0 (parameters) [black|white] [domain name]
+Usage:  $0 {parameters} [black|white] [domain name]
 Command line parameters:
     start       start parents agent
     stop        stop parents agent
