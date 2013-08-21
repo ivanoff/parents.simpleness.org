@@ -62,35 +62,35 @@ F.A.Q.
 
 bash: sudo: command not found 
 
-su -
+    su -
 
-apt-get -y install sudo || yum -y install sudo 
+    apt-get -y install sudo || yum -y install sudo 
 
 UserName is not in the sudoers file
 
-su -
+    su -
 
-echo "UserName ALL=(ALL) ALL" >> /etc/sudoers 
+    echo "UserName ALL=(ALL) ALL" >> /etc/sudoers 
 
 Another app is currently holding the yum lock
 
-sudo rm -f /var/run/yum.pid
+    sudo rm -f /var/run/yum.pid
 
 -bash: curl: command not found
 
-sudo apt-get -y install curl || sudo yum -y install curl 
+    sudo apt-get -y install curl || sudo yum -y install curl 
 
 
 Tested on:
 
 good: 
 
-CentOS-6.4-i386
+    CentOS-6.4-i386
 
-debian-6.0.7-i386
+    debian-6.0.7-i386
 
-ubuntu-12.04.2-server
+    ubuntu-12.04.2-server
 
 bad: 
 
-Fedora-15-i386 ( add to /etc/rc.local faled )
+    Fedora-15-i386 ( add to /etc/rc.local faled )
