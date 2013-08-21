@@ -163,7 +163,7 @@ Example:
     $0 list
     $0 list black simple.*
     $0 add white simpleness.org
-    $0 delete black ivanoff.org.ua
+    $0 delete black analytics.google.com
 EOF
 }
 

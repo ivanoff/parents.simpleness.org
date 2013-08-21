@@ -28,6 +28,38 @@ or download install.sh and run:
 
 sudo ./install.sh
 
+Usage:  ./parents.pl (parameters) [black|white] [domain name]
+
+Command line parameters:
+
+    start       start parents agent
+
+    stop        stop parents agent
+
+    restart     restart parents agent
+
+    status      show current status
+
+    list        list all domains
+
+    add         add domain to black or white list
+
+    delete      delete domain from black or white list
+
+    help        show this help
+
+Example:
+
+    ./parents.pl status
+
+    ./parents.pl list
+
+    ./parents.pl list black simple.*
+
+    ./parents.pl add white simpleness.org
+
+    ./parents.pl delete black analytics.google.com
+
 F.A.Q.
 
 bash: sudo: command not found 
