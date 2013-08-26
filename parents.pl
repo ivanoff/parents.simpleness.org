@@ -80,20 +80,20 @@ $_ = $ARGV[0];
         open (STDIN,"/usr/sbin/tcpdump 'port 80' -vvvs 1024 -l -A -i any |");
         while (<STDIN>) {
             next unless /Host: (\S+)\s$/;                   # We are looking for domainname after 'Host:'
-            my $_ = $1;
-            next if $sites->{white}{$_} || $sites->{black}{$_}; # skip if we already found domain name before
+            my $d = $1;
+            next if $sites->{white}{$d} || $sites->{black}{$d}; # skip if we already found domain name before
 
             # download the website's homepages/refreshes to find bad words
-            my $c = `wget -q -U "$agent" -O - http://$_ `;
-            $c = `wget -q -U "$agent" -O - http://$_/$1` while $c =~ /meta.*?http-equiv="Refresh".*?content=".*?URL=(.*?)"/i;
+            my $c = `wget -q -U "$agent" -O - http://$d `;
+            $c = `wget -q -U "$agent" -O - http://$d/$1` while $c =~ /meta.*?http-equiv="Refresh".*?content=".*?URL=(.*?)"/i;
 
             $sites = -f $store? retrieve( $store ) : {};    # retrieve previous domain names again after slow sites
             if ( 15 < $c =~ s/p[o0]rn[o0]?|sex|anal\b|tits|harcore|cumshots|blowjob|lesbian|pusy|fucking|orgasm|pissing|pussy|порно|секс//ig ) {
-                hosts('add', $_);                           # if we found more than 15 bad words, then ban site
-                $sites->{black}{$_} = 1;
+                hosts('add', $d);                           # if we found more than 15 bad words, then ban site
+                $sites->{black}{$d} = 1;
         	`killall firefox`;                          # `killall opera`; # or whatever your are
             } else {
-                $sites->{white}{$_} = 1;                    # if not found, then store domainname as white site
+                $sites->{white}{$d} = 1;                    # if not found, then store domainname as white site
             }
             store $sites, $store;
         }
@@ -110,8 +110,8 @@ $_ = $ARGV[0];
 # Add or delete hostname from /etc/hosts
 # Parameters are command and domain name.
 sub hosts {
-    my( $_, $name ) = @_;
-    /^delete$/ && do {
+    my( $t, $name ) = @_;
+    $t=~/^delete$/ && do {
         open my $f, '<', '/etc/hosts';
         my @records = <$f>;
         close $f;
@@ -121,7 +121,7 @@ sub hosts {
         print {$f} @records;
 	close $f;
     };
-    /^add$/ && do {  
+    $t=~/^add$/ && do {  
 	open my $f, '>>', '/etc/hosts';
 	print {$f} "\n127.0.0.1\t$name";  
 	close $f;
