@@ -15,7 +15,7 @@ die &help_message if !@ARGV || $ARGV[0] =~ /^-*h(elp)?$/;       # show help mess
 die "Error: Must run as root (sudo $0 ".(join ' ', @ARGV).")\n" if $>;
 
 $| = 1;                                         # forces a flush right away
-my $agent = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:23.0) Gecko/20100101 Firefox/23.0"; #curl agent
+my $agent = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:23.0) Gecko/20100101 Firefox/23.0"; #wget agent
 my $pid = &get_pid;
 my $dir = ( $0 =~ m%^(.*/)% )[0];               # where we're located
 my $store = $dir.'sites';                       # path to hash storable file with domains
@@ -84,8 +84,8 @@ $_ = $ARGV[0];
             next if $sites->{white}{$_} || $sites->{black}{$_}; # skip if we already found domain name before
 
             # download the website's homepages/refreshes to find bad words
-            my $c = `curl -A "$agent" http://$_ 2>/dev/null`;
-            $c = `curl -A "$agent" http://$_/$1 2>/dev/null` while $c =~ /meta.*?http-equiv="Refresh".*?content=".*?URL=(.*?)"/i;
+            my $c = `wget -q -U "$agent" -O - http://$_ `;
+            $c = `wget -q -U "$agent" -O - http://$_/$1` while $c =~ /meta.*?http-equiv="Refresh".*?content=".*?URL=(.*?)"/i;
 
             $sites = -f $store? retrieve( $store ) : {};    # retrieve previous domain names again after slow sites
             if ( 15 < $c =~ s/p[o0]rn[o0]?|sex|anal\b|tits|harcore|cumshots|blowjob|lesbian|pusy|fucking|orgasm|pissing|pussy|порно|секс//ig ) {
