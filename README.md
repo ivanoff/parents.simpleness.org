@@ -26,7 +26,7 @@ or
 
 or download install.sh and run: sudo ./install.sh
 
-Usage:  ./parents.pl (parameters) [black|white] [domain name]
+Usage:  ./parents (parameters) [black|white] [domain name]
 
 Command line parameters:
 
@@ -48,15 +48,15 @@ Command line parameters:
 
 Example:
 
-    ./parents.pl status
+    ./parents status
 
-    ./parents.pl list
+    ./parents list
 
-    ./parents.pl list black simple.*
+    ./parents list black simple.*
 
-    ./parents.pl add white simpleness.org
+    ./parents add white simpleness.org
 
-    ./parents.pl delete black analytics.google.com
+    ./parents delete black analytics.google.com
 
 F.A.Q.
 
