@@ -42,7 +42,7 @@ $_ = $ARGV[0];
     &need_name( $ARGV[2] );
     $sites->{$ARGV[1]}{$ARGV[2]} = 1;
     store $sites, $store;
-    hosts( 'add', $ARGV[2] );
+    hosts( 'add', $ARGV[2] ) if $ARGV[1] eq 'black';
     $ARGV[1]=($ARGV[1] eq 'black')? 'white' : 'black';  # trick - delete domain from oposite side
     $_ = 'delete';
 };
@@ -52,7 +52,7 @@ $_ = $ARGV[0];
     &need_name( $ARGV[1] );
     delete $sites->{$_}{$ARGV[1]} foreach 'white', 'black';
     store $sites, $store;
-    hosts( 'delete', $ARGV[1] );
+    hosts( 'delete', $ARGV[1] ) if $ARGV[1] eq 'black';
 };
 
 # Restart the programm
