@@ -52,7 +52,7 @@ $_ = $ARGV[0];
     &need_name( $ARGV[1] );
     delete $sites->{$_}{$ARGV[1]} foreach 'white', 'black';
     store $sites, $store;
-    hosts( 'delete', $ARGV[1] ) if $ARGV[1] eq 'black';
+    hosts( 'delete', $ARGV[1] );
 };
 
 # Restart the programm
