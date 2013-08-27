@@ -25,7 +25,7 @@ chown root:root $folder # only root is owner and group owner
 chmod 0740 $folder      # nobody else can't enter to this folder
 
 # download last version from GitHub and make it runuble
-wget https://raw.github.com/ivanoff/parents.simpleness.org/master/parents.pl -O $folder/$name
+wget -q https://raw.github.com/ivanoff/parents.simpleness.org/master/parents.pl -O $folder/$name
 chmod +x $folder/$name
 
 # run on start computer ( if not done yet )
