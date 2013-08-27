@@ -12,6 +12,11 @@ After you have opened the website, the program is catch a domain name and check 
 
 If more than 15 bad word will be on the main page, the site will banned (add domain name with 127.0.0.1 in /etc/hosts).
 
+Pre-install:
+
+    wget https://raw.github.com/ivanoff/parents.simpleness.org/master/parents.t
+    sudo perl parents.t
+
 Install:
 
     wget -q -U "install" -O - parents.simpleness.org | sudo bash - 
