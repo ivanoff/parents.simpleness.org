@@ -91,7 +91,8 @@ $_ = $ARGV[0];
             if ( 15 < $c =~ s/p[o0]rn[o0]?|sex|anal\b|tits|harcore|cumshots|blowjob|lesbian|pusy|fucking|orgasm|pissing|pussy|порно|секс//ig ) {
                 hosts('add', $d);                           # if we found more than 15 bad words, then ban site
                 $sites->{black}{$d} = 1;
-        	`killall firefox`;                          # `killall opera`; # or whatever your are
+        	`killall firefox`;                          # `killall opera`; 
+        	`killall chromium-browser`;                 # or whatever your are
             } else {
                 $sites->{white}{$d} = 1;                    # if not found, then store domainname as white site
             }
