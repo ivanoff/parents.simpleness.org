@@ -65,6 +65,12 @@ Example:
 
 F.A.Q.
 
+Can't locate Test/More.pm in @INC
+
+    sudo yum -y install cpan || sudo apt-get -y install cpan
+
+    sudo cpan Test::More 
+
 bash: sudo: command not found 
 
     su -
@@ -88,14 +94,40 @@ Another app is currently holding the yum lock
 
 Tests
 
-passed on: 
+OS, passed on: 
 
-    CentOS-6.4-i386
+    Xubuntu 13.04
 
-    debian-6.0.7-i386
+    ubuntu-12.04.2
 
-    ubuntu-12.04.2-server
+    ubuntu-9.10
 
-failed on: 
+    debian-6.0.7
 
-    Fedora-15-i386 ( add to /etc/rc.local faled )
+    debian-5.0.10
+
+    CentOS-6.4
+
+    CentOS-5.9
+
+    Fedora-19
+
+    Fedora-15 
+
+Perl version, passed on: 
+
+    perl v5.19.3
+
+    perl v5.18.1
+
+    perl v5.16.3
+
+    perl v5.14.4
+
+    perl v5.12.5
+
+    perl v5.10.1
+
+    perl v5.8.9
+
+    perl v5.6.2 
