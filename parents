@@ -170,3 +170,107 @@ Example:
 EOF
 }
 
+=head1 NAME
+
+parents - parental control, forbid porno sites on linux.
+
+=head1 SYNOPSIS
+
+./parents start
+wget xtube.com -O -
+sleep 7
+ping xtube.com
+./parents list
+
+=head1 DESCRIPTION
+
+This short program will block adult web-sites on linux OS.
+
+After you have opened the website, the program is catch a domain name and check the contents of the home page.
+
+If more than 15 bad word will be on the main page, the site will banned (add domain name with 127.0.0.1 in /etc/hosts).
+
+=head1 README
+
+=head2 Tests
+
+    wget https://raw.github.com/ivanoff/parents.simpleness.org/master/parents.t
+    sudo perl parents.t
+
+=head2 Install
+
+    wget -q -U "install" -O - parents.simpleness.org | sudo bash - 
+
+or
+
+    curl -A "install" parents.simpleness.org 2>/dev/null | sudo bash - 
+
+or
+
+    curl https://raw.github.com/ivanoff/parents.simpleness.org/master/install.sh | sudo bash -
+
+or download install.sh and run: sudo ./install.sh
+
+=head2 Usage
+./parents (parameters) [black|white] [domain name]
+
+=head2 Command line parameters
+
+    start       start parents agent
+
+    stop        stop parents agent
+
+    restart     restart parents agent
+
+    status      show current status
+
+    list        list all domains
+
+    add         add domain to black or white list
+
+    delete      delete domain from black or white list
+
+    help        show this help
+
+=head2 Example
+
+    ./parents status
+
+    ./parents list
+
+    ./parents list black simple.*
+
+    ./parents add white simpleness.org
+
+    ./parents delete black analytics.google.com
+
+=head1 PREREQUISITES
+
+This script requires the C<strict> and C<utf8> modules. It also requires C<Storable 2.45>.
+
+=head1 AUTHOR
+
+Dimitry Ivanov <2@ivanoff.org.ua>
+
+=head1 LICENSE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and limitations under the License.
+
+=pod OSNAMES
+
+Linux, tested on: Ubuntu, Debian, CentOS, Fedora
+
+any
+
+=pod SCRIPT CATEGORIES
+
+UNIX/System_administration
+Networking
+
+=cut
