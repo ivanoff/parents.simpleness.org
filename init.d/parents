@@ -1,0 +1,52 @@
+#!/bin/bash
+
+lockfile=/var/lock/parents
+
+RETVAL=0
+
+start() {
+        /usr/bin/perl /opt/parents/parents start
+        touch "$lockfile" || echo Can''t create lock file
+        RETVAL=$?
+        echo
+}
+
+stop() {
+        echo -n $"Disabling parental control: "
+        /usr/bin/perl /opt/parents/parents stop
+        /bin/rm "$lockfile" 2> /dev/null || echo Can''t remove lock file
+        RETVAL=$?
+        echo
+}
+
+restart() {
+        stop
+        start
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart|force-reload)
+        restart
+        ;;
+  status)
+        if [ -f $lockfile ]; then
+                echo $"Parental control is enabled."
+                /usr/bin/perl /opt/parents/parents status
+                RETVAL=0
+        else
+                echo $"Parental control is disabled."
+                RETVAL=3
+        fi
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|status|restart}"
+        exit 1
+esac
+
+exit $RETVAL 
