@@ -27,9 +27,9 @@ or
 
 or
 
-    curl https://raw.github.com/ivanoff/parents.simpleness.org/master/install.sh | sudo bash -
+    wget https://raw.github.com/ivanoff/parents.simpleness.org/master/parents -O /tmp/parents | sudo perl /tmp/parents install
 
-or download install.sh and run: sudo ./install.sh
+or download parents and run: sudo perl parents install
 
 Usage:  ./parents (parameters) [black|white] [domain name]
 

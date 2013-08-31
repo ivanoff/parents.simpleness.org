@@ -110,6 +110,24 @@ $_ = $ARGV[0];
     die ( ($pid)? "Running [PID $pid]\n" : "Stopped\n" );
 };
 
+# Install the programm
+/^install$/ && do {
+    open my $f, '<', '/etc/rc.local';
+    my @record = <$f>;
+    close $f;
+    `mkdir -p /opt/parents && chmod 0740 /opt/parents && chmod +x $0 && cp $0 /opt/parents/`;
+    if( !grep {/parents start/} @record ) {
+        push @record, '/usr/bin/perl /opt/parents/parents start';
+        @record = grep {!/exit 0/} @record;
+        open my $f, '>', '/etc/rc.local';
+        print {$f} @record;
+        print {$f} "\nexit 0\n";
+        close $f;
+        print "Programm added to /etc/rc.local\n";
+    }
+    print "Programm installed\n";
+};
+
 # Add or delete hostname from /etc/hosts
 # Parameters are command and domain name.
 sub hosts {
@@ -200,14 +218,10 @@ If more than 15 bad word will be on the main page, the site will banned (add dom
 =head2 Install
 
     wget -q -U "install" -O - parents.simpleness.org | sudo bash - 
-
 or
-
     curl -A "install" parents.simpleness.org 2>/dev/null | sudo bash - 
-
 or
-
-    curl https://raw.github.com/ivanoff/parents.simpleness.org/master/install.sh | sudo bash -
+    wget https://raw.github.com/ivanoff/parents.simpleness.org/master/parents -o /tmp/parens | sudo perl /tmp/parents install
 
 or download install.sh and run: sudo ./install.sh
 
@@ -217,31 +231,20 @@ or download install.sh and run: sudo ./install.sh
 =head2 Command line parameters
 
     start       start parents agent
-
     stop        stop parents agent
-
     restart     restart parents agent
-
     status      show current status
-
     list        list all domains
-
     add         add domain to black or white list
-
     delete      delete domain from black or white list
-
     help        show this help
 
 =head2 Example
 
     ./parents status
-
     ./parents list
-
     ./parents list black simple.*
-
     ./parents add white simpleness.org
-
     ./parents delete black analytics.google.com
 
 =head1 PREREQUISITES
