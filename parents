@@ -178,6 +178,7 @@ Command line parameters:
     list        list all domains
     add         add domain to black or white list
     delete      delete domain from black or white list
+    install     install programm
     help        show this help
 Example:
     $0 status
@@ -237,6 +238,7 @@ or download install.sh and run: sudo ./install.sh
     list        list all domains
     add         add domain to black or white list
     delete      delete domain from black or white list
+    install     install programm
     help        show this help
 
 =head2 Example

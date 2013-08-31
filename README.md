@@ -49,6 +49,8 @@ Command line parameters:
 
     delete      delete domain from black or white list
 
+    install     install programm
+
     help        show this help
 
 Example:
