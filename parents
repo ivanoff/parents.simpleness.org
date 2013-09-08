@@ -9,6 +9,7 @@
 use strict;
 use Storable;
 use utf8;
+use POSIX;
 
 my $VERSION = 0.1;
 
@@ -81,10 +82,18 @@ $_ = $ARGV[0];
 	# We will read tcpdump's output on port 80 to find Host with domain name
         open (STDIN,"/usr/sbin/tcpdump 'port 80' or 'port 443' -vvvs 1024 -l -A -i any |");
         while (<STDIN>) {
+            if ( /^Referer: (\S+)\s$/ ) {
+                next if $sites->{referer}{$1};                  # referer store with datetime information
+                $sites = -f $store? retrieve( $store ) : {};    # retrieve previous domain names again after slow sites
+                $sites->{referer}{$1} = (strftime "%F %T", localtime);
+                store $sites, $store;
+                next;
+            }
             my $ssl  = /^\.+(((\w{2,}\.)+)\w{2,3})\.$/;
             /Host: (\S+)\s$/;                   # We are looking for domainname after 'Host:'
             my $d = $1;
-            next if $type eq 'ssl' && $d =~ /^wTm\./;
+            next unless $d;
+            next if $ssl && $d =~ /^wTm\./;
             next if $sites->{white}{$d} || $sites->{black}{$d}; # skip if we already found domain name before
 
             # download the website's homepages/refreshes to find bad words
