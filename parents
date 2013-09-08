@@ -79,15 +79,18 @@ $_ = $ARGV[0];
         # main parents programm
 	$0 = $0.' started';     # rename runned process for get_pid subroutine
 	# We will read tcpdump's output on port 80 to find Host with domain name
-        open (STDIN,"/usr/sbin/tcpdump 'port 80' -vvvs 1024 -l -A -i any |");
+        open (STDIN,"/usr/sbin/tcpdump 'port 80' or 'port 443' -vvvs 1024 -l -A -i any |");
         while (<STDIN>) {
-            next unless /Host: (\S+)\s$/;                   # We are looking for domainname after 'Host:'
+            my $ssl  = /^\.+(((\w{2,}\.)+)\w{2,3})\.$/;
+            /Host: (\S+)\s$/;                   # We are looking for domainname after 'Host:'
             my $d = $1;
+            next if $type eq 'ssl' && $d =~ /^wTm\./;
             next if $sites->{white}{$d} || $sites->{black}{$d}; # skip if we already found domain name before
 
             # download the website's homepages/refreshes to find bad words
-            my $c = `wget -q -U "$agent" -O - http://$d `;
-            $c = `wget -q -U "$agent" -O - http://$d/$1` while $c =~ /meta.*?http-equiv="Refresh".*?content=".*?URL=(.*?)"/i;
+            my $protocol = $ssl? 'https' : 'http';
+            my $c = `wget -q -U "$agent" -O - $protocol://$d `;
+            $c = `wget -q -U "$agent" -O - $protocol://$d/$1` while $c =~ /meta.*?http-equiv="Refresh".*?content=".*?URL=(.*?)"/i;
 
             $sites = -f $store? retrieve( $store ) : {};    # retrieve previous domain names again after slow sites
             if ( 15 < $c =~ s/p[o0]rn[o0]?|sex|anal\b|tits|harcore|cumshots|blowjob|lesbian|pusy|fucking|orgasm|pissing|pussy|порно|секс//ig ) {
