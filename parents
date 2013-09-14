@@ -80,7 +80,7 @@ $_ = $ARGV[0];
         # main parents programm
 	$0 = $0.' started';     # rename runned process for get_pid subroutine
 	# We will read tcpdump's output on port 80 to find Host with domain name
-        open (STDIN,"/usr/sbin/tcpdump 'port 80' or 'port 443' -vvvs 1024 -l -A -i any |");
+        open (STDIN,"/usr/sbin/tcpdump 'port 80' or 'port 443' -vvvs 8192 -l -A -i any |");
         while (<STDIN>) {
             if ( /^Referer: (\S+)\s$/ ) {
                 next if $sites->{referer}{$1};                  # referer store with datetime information
