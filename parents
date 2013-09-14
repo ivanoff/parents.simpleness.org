@@ -34,7 +34,9 @@ $_ = $ARGV[0];
         print "$type:\n";
         foreach my $name ( sort keys %{$sites->{$type}} ){
             next if $ARGV[2] && $ARGV[2] !~ /$name/i;
-            print "\t$name\n";
+            print "\t$name";
+            print "\t$sites->{$type}{$name}\n" if $sites->{$type}{$name} != 1;
+            print "\n";
         }
     }
 };
