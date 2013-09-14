@@ -1,0 +1,102 @@
+### Commented entries have reasonable defaults.
+### Uncomment to edit them.
+# Source: <source package name; defaults to package name>
+Section: misc
+Priority: optional
+# Homepage: <enter URL here; no default>
+Standards-Version: 3.9.2
+
+Package: parents
+Version: 0.2
+Maintainer: Dimitry Ivanov <2@ivanoff.org.ua>
+# Pre-Depends: <comma-separated list of packages>
+Depends: tcpdump,wget
+# Recommends: <comma-separated list of packages>
+# Suggests: <comma-separated list of packages>
+# Provides: <comma-separated list of packages>
+# Replaces: <comma-separated list of packages>
+# Architecture: all
+Copyright: ../../LICENSE
+# Changelog: <changelog file; defaults to a generic changelog>
+Readme: ../../README.md
+# Extra-Files: <comma-separated list of additional files for the doc directory>
+# Files: <pair of space-separated paths; First is file to include, second is destination>
+Files: ../../parents /opt/parents/parents
+ ../../sites /opt/parents/sites
+#  <more pairs, if there's more than one file to include. Notice the starting space>
+File: postinst
+ #!/bin/sh
+ # preinst for main-package-config. Divert some configuration file of main-package.
+ ln -s /etc/init.d/parents /etc/rc1.d/S89parents
+ ln -s /etc/init.d/parents /etc/rc2.d/S89parents
+ ln -s /etc/init.d/parents /etc/rc3.d/S89parents
+ ln -s /etc/init.d/parents /etc/rc5.d/S89parents
+ echo '#!/bin/bash
+ 
+ lockfile=/var/lock/parents
+ 
+ RETVAL=0
+ 
+ start() {
+         /usr/bin/perl /opt/parents/parents start
+         touch "$lockfile" || echo Can''t create lock file
+         RETVAL=$?
+          echo
+ }
+ 
+ stop() {
+         echo -n $"Disabling parental control: "
+         /usr/bin/perl /opt/parents/parents stop
+         /bin/rm "$lockfile" 2> /dev/null || echo Can''t remove lock file
+         RETVAL=$?
+         echo
+ }
+ 
+ restart() {
+         stop
+         start
+ }
+ 
+ case "$1" in
+   start)
+         start
+         ;;
+   stop)
+         stop
+         ;;
+   restart|force-reload)
+         restart
+         ;;
+   status)
+         if [ -f $lockfile ]; then
+                 echo $"Parental control is enabled."
+                 /usr/bin/perl /opt/parents/parents status
+                 RETVAL=0
+         else
+                 echo $"Parental control is disabled."
+                 RETVAL=3
+         fi
+         ;;
+   *)
+         echo $"Usage: $0 {start|stop|status|restart}"
+         exit 1
+ esac
+ 
+ exit $RETVAL ' > /etc/init.d/parents  
+ 
+ chmod +x /etc/init.d/parents
+ exit 0
+File: prerm
+ #!/bin/sh
+ rm /etc/rc1.d/S89parents
+ rm /etc/rc2.d/S89parents
+ rm /etc/rc3.d/S89parents
+ rm /etc/rc5.d/S89parents
+ rm /etc/init.d/parents
+ exit 0
+Description: Parental control script. Forbid porno sites on linux.
+ This short program will block adult web-sites on linux OS.
+ .
+ After you have opened the website, the program is catch a domain name and check the contents of the home page.
+ .
+ If more than 15 bad word will be on the main page, the site will banned (add domain name with 127.0.0.1 in /etc/hosts).
